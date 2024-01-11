@@ -88,10 +88,10 @@ void declararId(char* id){
     push(&info, &diccionario);
 }
 
-void asignarA(char* id, double nro){
+void asignarA(char* id, const double num){
     struct NodoId* variable = buscarEnDict(id);
     if(variable != NULL){
-        variable->info.valor.var = nro;
+        variable->info.valor.var = num;
     }
 }
 

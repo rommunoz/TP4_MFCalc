@@ -9,7 +9,7 @@
 		    "type": "cppdbg",
 		    "request": "launch",
 		    "program": "${fileDirname}/${workspaceFolderBasename}",
-		    "args": ["<entrada.txt", ">miSalida.txt"],
+		    "args": ["<entrada2.txt"],
 		    "stopAtEntry": false,
 		    "cwd": "${fileDirname}",
 		    "environment": [],

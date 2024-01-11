@@ -1402,7 +1402,7 @@ yyreduce:
   case 7: /* linea: PR_VAR ID  */
 #line 45 "parser.y"
                                     { if (fueDeclarado((yyvsp[0].id))) { printf("Error semántico, ID ya declarado"); 
-                                      } else {  declararId((yyvsp[0].id)); printf("Define ID como variable\n"); } 
+                                      } else {  declararId((yyvsp[0].id)); printf("%s: '%f'\n", (yyvsp[0].id), valorDe((yyvsp[0].id))); } 
                                     }
 #line 1408 "parser.c"
     break;
@@ -1410,8 +1410,8 @@ yyreduce:
   case 8: /* linea: PR_VAR ID '=' expresion  */
 #line 48 "parser.y"
                                     { if (fueDeclarado((yyvsp[-2].id))) { printf("Error semántico, ID ya declarado");
-                                      } else { declararId((yyvsp[-2].id)); asignarA((yyvsp[-2].id), (yyvsp[-1].nro)); 
-                                        printf("Define ID '%s' como variable con valor inicial '%f'\n", (yyvsp[-2].id), (yyvsp[0].nro) ); }
+                                      } else { declararId((yyvsp[-2].id)); asignarA((yyvsp[-2].id), (yyvsp[0].nro) );
+                                        printf("%s: '%f'\n", (yyvsp[-2].id), (yyvsp[0].nro) ); }
                                     }
 #line 1417 "parser.c"
     break;
@@ -1425,7 +1425,7 @@ yyreduce:
   case 10: /* expresion: ID  */
 #line 54 "parser.y"
                                     { if(!fueDeclarado((yyvsp[0].id))) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;}
-                                        (yyval.nro) = valorDe((yyvsp[0].id));     printf("ID\n");}
+                                        (yyval.nro) = valorDe((yyvsp[0].id));     printf("%s\n", (yyvsp[0].id));}
 #line 1430 "parser.c"
     break;
 

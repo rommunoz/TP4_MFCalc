@@ -1,0 +1,8 @@
+var a = 1
+var b = 2
+var c = 3
+var z = (a += (b *= c)) / 2
+a
+b
+c
+

@@ -24,7 +24,7 @@ void iniciarDiccionario(void);
 int fueDeclarado(char* idVariable);
 struct NodoId* buscarEnDict(char* idVariable);
 void declararId(char* idVariable);
-void asignarA(char* idVariable, double exp);
+void asignarA(char* idVariable, const double num);
 int esFuncion (struct NodoId* nodo);
 double valorDe(char* idVariable);
 void vaciarLista(struct NodoId** lista);
