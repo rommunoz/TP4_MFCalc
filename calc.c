@@ -139,7 +139,7 @@ void mostrarDiccionario(){
     while(paux != NULL){
         if(paux->info.tipo == FUNC)
             printf("Funcion: %s, Direccion: \t%p\n", paux->info.nom, paux->info.valor.fun);
-        if(paux->info.tipo == FUNC)
+        if(paux->info.tipo == VAR)
             printf("Variable: %s, Valor: \t%lf\n", paux->info.nom, paux->info.valor.var);
         paux = paux->sig;
     }

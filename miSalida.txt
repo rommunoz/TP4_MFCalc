@@ -1,3 +1,13 @@
+Variable: e, Valor: 	2.718280
+Variable: pi, Valor: 	3.141590
+Funcion: log, Direccion: 	00007FF7220D6020
+Funcion: sqrt, Direccion: 	00007FF7220D5D80
+Funcion: acos, Direccion: 	00007FF7220D72D8
+Funcion: asin, Direccion: 	00007FF7220D72E0
+Funcion: atan, Direccion: 	00007FF7220D72E8
+Funcion: tan, Direccion: 	00007FF7220D72F0
+Funcion: cos, Direccion: 	00007FF7220D5ED0
+Funcion: sin, Direccion: 	00007FF7220D6760
 Define ID como variable
 
 Número
@@ -8,24 +18,21 @@ ID
 Número
 Multiplicación
 Suma
-Asignación
-Expresión
+Expresión, resultado: 3.000000
 
 ID
 Número
 Potenciación
-Expresión
+Expresión, resultado: 0.000000
 
 ID
 Número
 División
 Llamado a función
-Expresión
+Expresión, resultado: 0.000000
 
 Número
-Asignación con suma
-Asignación
-Expresión
+Expresión, resultado: 1.000000
 
 Número
 Número
@@ -34,10 +41,10 @@ Cierra paréntesis
 ID
 Cambio de signo
 Multiplicación
-Expresión
+Expresión, resultado: -0.000000
 
 Número
-Expresión
+Expresión, resultado: 13.250000
 
 línea #9: Error léxico: Constante inválida: '12a3'
 
@@ -51,8 +58,8 @@ Número
 línea #13: syntax error, unexpected '*', expecting ID or NRO or '-' or '('
 
 ID
-Expresión
+Expresión, resultado: 0.000000
 
 Palabra reservada salir
 
-No pertenece al LIC
+Fin del parser: 1

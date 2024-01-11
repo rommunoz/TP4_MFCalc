@@ -46,12 +46,13 @@ linea   :  expresion                { printf("Expresión, resultado: %f\n", $<nr
                                       } else {  declararId($<id>2); printf("Define ID como variable\n"); } 
                                     }
     | PR_VAR ID '=' expresion       { if (fueDeclarado($<id>2)) { printf("Error semántico, ID ya declarado");
-                                      } else { declararId($<id>2); asignarA($<id>2, $<nro>3); printf("Define ID como variable con valor inicial\n"); }
+                                      } else { declararId($<id>2); asignarA($<id>2, $<nro>4); 
+                                        printf("Define ID '%s' como variable con valor inicial '%f'\n", $<id>2, $<nro>4 ); }
                                     }
     | PR_SALIR NL                   { printf("Palabra reservada salir\n\n"); return (yynerrs || yylexerrs);}
     ;
 expresion : ID                      { if(!fueDeclarado($<id>1)) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;}
-                                      $$ = $<nro>1;     printf("ID\n");}               
+                                        $$ = valorDe($<id>1);     printf("ID\n");}               
     | ID '=' expresion              { if(!fueDeclarado($<id>1)) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;} 
                                         $$ = $<nro>3; asignarA($<id>1, $<nro>3); }
     | ID "+=" expresion             { if(!fueDeclarado($<id>1)) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;} 
