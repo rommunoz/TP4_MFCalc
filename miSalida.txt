@@ -1,0 +1,58 @@
+Define ID como variable
+
+Número
+Define ID como variable con valor inicial
+
+Número
+ID
+Número
+Multiplicación
+Suma
+Asignación
+Expresión
+
+ID
+Número
+Potenciación
+Expresión
+
+ID
+Número
+División
+Llamado a función
+Expresión
+
+Número
+Asignación con suma
+Asignación
+Expresión
+
+Número
+Número
+Suma
+Cierra paréntesis
+ID
+Cambio de signo
+Multiplicación
+Expresión
+
+Número
+Expresión
+
+línea #9: Error léxico: Constante inválida: '12a3'
+
+línea #10: Error léxico: Identificador inválido: 'a#2.4'
+
+línea #11: Error léxico: Real inválido: '2.3.4a2.3'
+
+línea #12: Error léxico: Cadena desconocida: '@@#;@'
+
+Número
+línea #13: syntax error, unexpected '*', expecting ID or NRO or '-' or '('
+
+ID
+Expresión
+
+Palabra reservada salir
+
+No pertenece al LIC
