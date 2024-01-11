@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include "scanner.h"
-#include "parser.h"
 #include "calc.h"
+#include "parser.h"
 
 int yylexerrs = 0;
+int semerrs = 0;
 int main(void){
     iniciarDiccionario();
 	mostrarDiccionario();

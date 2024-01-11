@@ -7,8 +7,10 @@ extern int semerrs;
 struct Identificador {
     char* nom;
     int   tipo;
-    double (*direccion)(double);
-    double valor;
+    union {
+        double (*fun)(double);
+        double var;
+    } valor;
 };
 
 struct NodoId {
@@ -16,14 +18,14 @@ struct NodoId {
     struct NodoId* sig;
 };
 
-struct NodoId* diccionario;
+extern struct NodoId *diccionario;
 
 void iniciarDiccionario(void);
 int fueDeclarado(char* idVariable);
+struct NodoId* buscarEnDict(char* idVariable);
 void declararId(char* idVariable);
 void asignarA(char* idVariable, double exp);
-double controlDivision(double arg1, double arg2);
-double llamarFuncion(char* idFunc, double arg);
+int esFuncion (struct NodoId* nodo);
 double valorDe(char* idVariable);
 void vaciarLista(struct NodoId** lista);
 void mostrarDiccionario(void);
