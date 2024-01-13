@@ -7,8 +7,7 @@ int yylexerrs = 0;
 int semerrs = 0;
 int main(void){
     iniciarDiccionario();
-	int parseRes = yyparse();
-	printf("Fin del parser: %d", parseRes);
+	yyparse();
 	vaciarLista(&diccionario);
 	return 0;
 }

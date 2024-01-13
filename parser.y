@@ -36,48 +36,61 @@ extern int yylexerrs;
 
 %%
 
-programa: sesion                    { if (semerrs || yynerrs || yylexerrs) YYABORT;}
+programa: sesion                { if (semerrs || yynerrs || yylexerrs) YYABORT;}
     ;
-sesion 	: linea NL                  { printf("\n"); }
-    | sesion linea NL               { printf("\n"); }
+sesion 	: linea NL              
+    | sesion linea NL           
     ;
-linea   :  expresion                { printf("> %f\n", $<nro>1); }
+linea   :  expresion            { printf("> %f\n", $<nro>1); }
     | error
-    | PR_VAR ID                     { if ($2->info.declarado)   {semerror("Error, ID ya declarado"); YYERROR; 
-                                      } else { declararId($2->info.nom);
-                                            printf("> %s: '%f'\n", $2->info.nom, $2->info.valor.var); } 
-                                    }
-    | PR_VAR ID '=' expresion       { if ($2->info.declarado)   {semerror("Error, ID ya declarado"); YYERROR;
-                                      } else { struct NodoId* nuevo = declararId($2->info.nom);
-                                         asignarA(nuevo, $4);
-                                            printf("> %s: '%f'\n", nuevo->info.nom, nuevo->info.valor.var); }
-                                    }
-    | PR_SALIR                      { printf("Palabra reservada salir\n\n"); return (yynerrs || yylexerrs || semerrs);}
+    | PR_VAR ID                 { if ($2->info.declarado)   {semerror("Error, ID ya declarado"); YYERROR;} 
+                                    declararId($2->info.nom);
+                                    printf("> %s: '%f'\n", $2->info.nom, $2->info.valor.var);
+                                }
+    | PR_VAR ID '=' expresion   { if ($2->info.declarado)   {semerror("Error, ID ya declarado"); YYERROR;}
+                                    struct NodoId* nuevo = declararId($2->info.nom);
+                                    asignarA(nuevo, $4);
+                                    printf("> %s: '%f'\n", nuevo->info.nom, nuevo->info.valor.var);
+                                }
+    | PR_SALIR                  { return (yynerrs || yylexerrs || semerrs);}
     ;
-expresion : ID                      { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
-                                        $$ = valorDe($1);        printf("%s: ", $1->info.nom);}               
-    | ID '=' expresion              { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
-                                        $$ = $3;                        asignarA($1, $3); }
-    | ID "+=" expresion             { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
-                                        $$ = valorDe($1) + $3;   asignarA($1, $$); }
-    | ID "-=" expresion             { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
-                                        $$ = valorDe($1) - $3;   asignarA($1, $$); }
-    | ID "*=" expresion             { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
-                                        $$ = valorDe($1) * $3;   asignarA($1, $$); }
-    | ID "/=" expresion             { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
-                                      if(! $3)                  {semerror("Error, división por cero"); YYERROR;}
-                                      $$ = valorDe($1) / $3;     asignarA($1, $$); }
+expresion : ID                  { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                    $$ = valorDe($1);
+                                }               
+    | ID '=' expresion          { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                    $$ = $3;                 
+                                    asignarA($1, $3); 
+                                }
+    | ID "+=" expresion         { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                    $$ = valorDe($1) + $3;   
+                                    asignarA($1, $$); 
+                                }
+    | ID "-=" expresion         { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                    $$ = valorDe($1) - $3;   
+                                    asignarA($1, $$); 
+                                }
+    | ID "*=" expresion         { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                    $$ = valorDe($1) * $3;   
+                                    asignarA($1, $$); 
+                                }
+    | ID "/=" expresion         { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                    if(! $3)                {semerror("Error, división por cero"); YYERROR;}
+                                    $$ = valorDe($1) / $3;   
+                                    asignarA($1, $$); 
+                                }
     | NRO                           
-    | expresion '+' expresion       { $$ = $1 + $3; }			
-    | expresion '-' expresion       { $$ = $1 - $3; }	
-    | expresion '*' expresion       { $$ = $1 * $3; }
-    | expresion '/' expresion       { if(!$3)                   {semerror("Error, división por cero"); YYERROR;}
-                                      $$ = $1 / $3; }
-    | expresion '^' expresion       { $$ = pow($1, $3); }
-    | '-' expresion  %prec NEG      { $$ = -$2;         }
-    | '(' expresion ')'             { $$ = $2;          }
-    | ID '(' expresion ')'          { if(! esFuncion($1))       {semerror("Error, la función no está definida"); YYERROR;}
-                                      $$ = $1->info.valor.fun ($<nro>3); }  
+    | expresion '+' expresion   { $$ = $1 + $3; }			
+    | expresion '-' expresion   { $$ = $1 - $3; }	
+    | expresion '*' expresion   { $$ = $1 * $3; }
+    | expresion '/' expresion   { if(!$3)                   {semerror("Error, división por cero"); YYERROR;}
+                                    $$ = $1 / $3;   
+                                }
+    | expresion '^' expresion   { $$ = pow($1, $3); }
+    | '-' expresion  %prec NEG  { $$ = -$2; }
+    | '(' expresion ')'         { $$ = $2;  }
+    | ID '(' expresion ')'      { if(! esFuncion($1))       {semerror("Error, la función no está definida"); YYERROR;}
+                                    $$ = $1->info.valor.fun ($<nro>3);
+                                }  
     ;
 
 %%
