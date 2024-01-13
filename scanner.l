@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "parser.h"
+#include "calc.h"
 char msg[120];
 %}
 %option header-file="scanner.h"
@@ -22,7 +23,9 @@ idInvalido          {letra}[a-zA-Z0-9]*{fueraDelAlfabeto}.*
 
 var                         return PR_VAR;
 salir                       return PR_SALIR;
-{letra}[a-zA-Z0-9]*         {yylval.id = strdup(yytext); return ID;}
+{letra}[a-zA-Z0-9]*         {if (! (yylval.sym = buscarEnDict(yytext))) 
+                                {yylval.sym = &temp; yylval.sym->info.nom = strdup(yytext); yylval.sym->info.declarado = 0;}
+                                return ID;}
 \n                          return NL;
 {flotante}|[0-9]+           {sscanf(yytext, "%lf", &yylval.nro); return NRO;}
 -=                          return OP_MENOS_IG;

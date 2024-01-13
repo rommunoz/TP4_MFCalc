@@ -1,50 +1,18 @@
-Variable: e, Valor: 	2.718280
-Variable: pi, Valor: 	3.141590
-Funcion: log, Direccion: 	00007FF7220D6020
-Funcion: sqrt, Direccion: 	00007FF7220D5D80
-Funcion: acos, Direccion: 	00007FF7220D72D8
-Funcion: asin, Direccion: 	00007FF7220D72E0
-Funcion: atan, Direccion: 	00007FF7220D72E8
-Funcion: tan, Direccion: 	00007FF7220D72F0
-Funcion: cos, Direccion: 	00007FF7220D5ED0
-Funcion: sin, Direccion: 	00007FF7220D6760
-Define ID como variable
+> a: '0.000000'
 
-Número
-Define ID como variable con valor inicial
+> b: '2.300000'
 
-Número
-ID
-Número
-Multiplicación
-Suma
-Expresión, resultado: 3.000000
+b: > 7.600000
 
-ID
-Número
-Potenciación
-Expresión, resultado: 0.000000
+b: > 12.167000
 
-ID
-Número
-División
-Llamado a función
-Expresión, resultado: 0.000000
+pi: > 1.000000
 
-Número
-Expresión, resultado: 1.000000
+> 3.300000
 
-Número
-Número
-Suma
-Cierra paréntesis
-ID
-Cambio de signo
-Multiplicación
-Expresión, resultado: -0.000000
+a: > -16.500000
 
-Número
-Expresión, resultado: 13.250000
+> 13.250000
 
 línea #9: Error léxico: Constante inválida: '12a3'
 
@@ -54,11 +22,9 @@ línea #11: Error léxico: Real inválido: '2.3.4a2.3'
 
 línea #12: Error léxico: Cadena desconocida: '@@#;@'
 
-Número
 línea #13: syntax error, unexpected '*', expecting ID or NRO or '-' or '('
 
-ID
-Expresión, resultado: 0.000000
+a: > 3.300000
 
 Palabra reservada salir
 

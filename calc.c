@@ -3,11 +3,13 @@
 #include <strings.h>
 #include <math.h>
 #define DIM_FUNC 8
+#define DIM_CONST 2
 
 
 struct Identificador {
     char* nom;
     int   tipo;
+    int   declarado;
     union {
         double (*fun)(double);
         double var;
@@ -20,8 +22,9 @@ struct NodoId {
 };
 
 extern int semerrs;
-enum TipoID {VAR, FUNC}; //si hubieran más palabras reservadas se podría hacer algo similar a lo hecho con las funciones
+enum TipoID {VAR, FUNC};
 struct NodoId* diccionario;
+struct NodoId temp;
 
 struct Funcion {
     char*   nom;
@@ -39,16 +42,27 @@ struct Funcion tablaDeFunciones[DIM_FUNC] = {
     {"log" , log}
 };
 
+struct Constante {
+    char*   nom;
+    double  valor;
+};
+
+struct Constante constantes[DIM_CONST] = {
+    {"e" , 2.71828},
+    {"pi", 3.14159}
+};
+
 /* --------------------------- */
 /* ---- Fin declaraciones ---- */
 /* --------------------------- */
 
-void push (struct Identificador* info, struct NodoId** pila){
+struct NodoId* push (struct Identificador* info, struct NodoId** pila){
     struct NodoId* nuevo = malloc(sizeof(struct NodoId));
     nuevo->info = *info;
     struct NodoId* aux = *pila;
     *pila = nuevo;
     nuevo->sig = aux;
+    return nuevo;
 }
 
 void pop(struct NodoId** pila){
@@ -61,6 +75,10 @@ void pop(struct NodoId** pila){
     free(aux);
 }
 
+/* ---------------------------- */
+/* -- Fin funciones internas -- */
+/* ---------------------------- */
+
 //despues se debe controlar el tipo del nodo encontrado
 struct NodoId* buscarEnDict(char* idVariable){
     struct NodoId* paux = diccionario;
@@ -70,28 +88,18 @@ struct NodoId* buscarEnDict(char* idVariable){
     return paux != NULL && strcmp(paux->info.nom, idVariable) == 0 ? paux: NULL;
 }
 
-/* ---------------------------- */
-/* -- Fin funciones internas -- */
-/* ---------------------------- */
-
-//booleano
-int fueDeclarado(char* id){
-    struct NodoId* nodoid = buscarEnDict(id);
-    return nodoid != NULL;
-}
-
-void declararId(char* id){
+struct NodoId* declararId(char* id){
     struct Identificador info;
     info.nom = strdup(id);
     info.tipo = VAR;
+    info.declarado = 1;
     info.valor.var = 0.0;
-    push(&info, &diccionario);
+    return push(&info, &diccionario);
 }
 
-void asignarA(char* id, const double num){
-    struct NodoId* variable = buscarEnDict(id);
-    if(variable != NULL){
-        variable->info.valor.var = num;
+void asignarA(struct NodoId* nodvar, const double num){
+    if(nodvar != NULL){
+        nodvar->info.valor.var = num;
     }
 }
 
@@ -101,14 +109,33 @@ void iniciarDiccionario(void){
     for (int i=0; i < DIM_FUNC; i++){
         info.nom = tablaDeFunciones[i].nom;
         info.tipo = FUNC;
-        info.valor.var = 0.0; //lo inicializo aunque sea funcion
+        info.declarado = 1;
         info.valor.fun = tablaDeFunciones[i].direccion;
         push(&info, &diccionario);
     }
-    declararId("pi");
-    asignarA("pi", 3.14159);
-    declararId("e");
-    asignarA("e", 2.71828);
+    for (int i=0; i < DIM_CONST; i++){//esto por si se agregan mas constantes, aunque al ser dos tomaría 4 lineas de código
+        info.nom = constantes[i].nom;
+        info.tipo = VAR;
+        info.declarado = 1;
+        info.valor.var = constantes[i].valor;
+        push(&info, &diccionario);
+    }
+}
+
+
+//booleano
+int fueDeclarado (struct NodoId* nodo){
+    return nodo->info.declarado && nodo->info.tipo == VAR;
+}
+
+//booleano
+int esFuncion (struct NodoId* nodo){
+    return nodo->info.declarado && nodo->info.tipo == FUNC;
+}
+
+//accessor - surge por usar union en el parser y en el momento de asignar
+double valorDe(struct NodoId* nodId){
+    return nodId->info.valor.var;
 }
 
 void vaciarLista(struct NodoId** lista){
@@ -117,30 +144,6 @@ void vaciarLista(struct NodoId** lista){
     }
 }
 
-
-//booleano
-int esFuncion (struct NodoId* nodo){
-    return nodo != NULL && nodo->info.tipo == FUNC;
-}
-
-//accessor - surge por usar union en el parser y en el momento de asignar
-double valorDe(char* idVariable){
-    struct NodoId* nodId = buscarEnDict(idVariable);
-        return nodId->info.valor.var;
-}
-
 /* ---------------------------- */
 /* -- Fin funciones externas -- */
 /* ---------------------------- */
-
-
-void mostrarDiccionario(){
-    struct NodoId* paux = diccionario;
-    while(paux != NULL){
-        if(paux->info.tipo == FUNC)
-            printf("Funcion: %s, Direccion: \t%p\n", paux->info.nom, paux->info.valor.fun);
-        if(paux->info.tipo == VAR)
-            printf("Variable: %s, Valor: \t%lf\n", paux->info.nom, paux->info.valor.var);
-        paux = paux->sig;
-    }
-}

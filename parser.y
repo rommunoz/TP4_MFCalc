@@ -23,13 +23,14 @@ int yylex(void);
 
 %code provides {
 void yyerror(const char *);
+void semerror(const char *);
 extern int yylexerrs;
 }
 %union YYSTYPE {
-    char*   id;
+    struct NodoId* sym; //simbolo de la tabla
     double  nro;
 }
-%type   <id>  PR_VAR PR_SALIR ID 
+%type   <sym> ID 
 %type   <nro> NRO 
 %nterm  <nro> expresion
 
@@ -40,42 +41,43 @@ programa: sesion                    { if (semerrs || yynerrs || yylexerrs) YYABO
 sesion 	: linea NL                  { printf("\n"); }
     | sesion linea NL               { printf("\n"); }
     ;
-linea   :  expresion                { printf("Expresión, resultado: %f\n", $<nro>1); }
+linea   :  expresion                { printf("> %f\n", $<nro>1); }
     | error
-    | PR_VAR ID                     { if (fueDeclarado($<id>2)) { printf("Error semántico, ID ya declarado"); 
-                                      } else {  declararId($<id>2); printf("%s: '%f'\n", $<id>2, valorDe($<id>2)); } 
+    | PR_VAR ID                     { if ($2->info.declarado)   {semerror("Error, ID ya declarado"); YYERROR; 
+                                      } else { declararId($2->info.nom);
+                                            printf("> %s: '%f'\n", $2->info.nom, $2->info.valor.var); } 
                                     }
-    | PR_VAR ID '=' expresion       { if (fueDeclarado($<id>2)) { printf("Error semántico, ID ya declarado");
-                                      } else { declararId($<id>2); asignarA($<id>2, $<nro>4 );
-                                        printf("%s: '%f'\n", $<id>2, $<nro>4 ); }
+    | PR_VAR ID '=' expresion       { if ($2->info.declarado)   {semerror("Error, ID ya declarado"); YYERROR;
+                                      } else { struct NodoId* nuevo = declararId($2->info.nom);
+                                         asignarA(nuevo, $4);
+                                            printf("> %s: '%f'\n", nuevo->info.nom, nuevo->info.valor.var); }
                                     }
-    | PR_SALIR NL                   { printf("Palabra reservada salir\n\n"); return (yynerrs || yylexerrs);}
+    | PR_SALIR                      { printf("Palabra reservada salir\n\n"); return (yynerrs || yylexerrs || semerrs);}
     ;
-expresion : ID                      { if(!fueDeclarado($<id>1)) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;}
-                                        $$ = valorDe($<id>1);     printf("%s\n", $<id>1);}               
-    | ID '=' expresion              { if(!fueDeclarado($<id>1)) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;} 
-                                        $$ = $<nro>3; asignarA($<id>1, $<nro>3); }
-    | ID "+=" expresion             { if(!fueDeclarado($<id>1)) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;} 
-                                        $$ = valorDe($<id>1) + $<nro>3; asignarA($<id>1, $<nro>$); }
-    | ID "-=" expresion             { if(!fueDeclarado($<id>1)) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;} 
-                                        $$ = valorDe($<id>1) - $<nro>3; asignarA($<id>1, $<nro>$); }
-    | ID "*=" expresion             { if(!fueDeclarado($<id>1)) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;} 
-                                        $$ = valorDe($<id>1) * $<nro>3; asignarA($<id>1, $<nro>$); }
-    | ID "/=" expresion             { if(!fueDeclarado($<id>1)) {yyerror("Error semántico, identificador no definido"); semerrs++; YYERROR;}
-                                      if(!valorDe($<id>3))      {yyerror("Error semántico, división por cero"); semerrs++; YYERROR;}
-                                      $$ = valorDe($<id>1) / $<nro>3; asignarA($<id>1, $<nro>$); }
-    | NRO                           { $$ = $1;          printf("Número\n");}
-    | expresion '+' expresion       { $$ = $1 + $3;     printf("Suma\n");}			
-    | expresion '-' expresion       { $$ = $1 - $3;     printf("Resta\n");}	
-    | expresion '*' expresion       { $$ = $1 * $3;     printf("Multiplicación\n");}
-    | expresion '/' expresion       { if(!$<nro>3)      {yyerror("Error semántico, división por cero"); YYERROR;}
-                                      $$ = $<nro>1 / $<nro>3;  printf("División\n");}
-    | expresion '^' expresion       { $$ = pow($1, $3); printf("Potenciación\n");}
-    | '-' expresion  %prec NEG      { $$ = -$<nro>2;    printf("Cambio de signo\n");}
-    | '(' expresion ')'             { $$ = $<nro>2;     printf("Cierra paréntesis\n");}
-    | ID '(' expresion ')'          { struct NodoId* nodo = buscarEnDict($<id>1);
-                                      if(!esFuncion(nodo)) {yyerror("Error semántico, la funcion no está definida"); YYERROR;} 
-                                      $<nro>$ = nodo->info.valor.fun ($<nro>3); printf("Llamado a función\n");}
+expresion : ID                      { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                        $$ = $1->info.valor.var;        printf("%s: ", $1->info.nom);}               
+    | ID '=' expresion              { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                        $$ = $3;                        asignarA($1, $3); }
+    | ID "+=" expresion             { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                        $$ = $1->info.valor.var + $3;   asignarA($1, $$); }
+    | ID "-=" expresion             { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                        $$ = $1->info.valor.var - $3;   asignarA($1, $$); }
+    | ID "*=" expresion             { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                        $$ = $1->info.valor.var * $3;   asignarA($1, $$); }
+    | ID "/=" expresion             { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+                                      if(! $3)                  {semerror("Error, división por cero"); YYERROR;}
+                                      $$ = $1->info.valor.var / $3;     asignarA($1, $$); }
+    | NRO                           
+    | expresion '+' expresion       { $$ = $1 + $3; }			
+    | expresion '-' expresion       { $$ = $1 - $3; }	
+    | expresion '*' expresion       { $$ = $1 * $3; }
+    | expresion '/' expresion       { if(!$3)                   {semerror("Error, división por cero"); YYERROR;}
+                                      $$ = $1 / $3; }
+    | expresion '^' expresion       { $$ = pow($1, $3); }
+    | '-' expresion  %prec NEG      { $$ = -$2;         }
+    | '(' expresion ')'             { $$ = $2;          }
+    | ID '(' expresion ')'          { if(! esFuncion($1))       {semerror("Error, la función no está definida"); YYERROR;}
+                                      $$ = $1->info.valor.fun ($<nro>3); }  
     ;
 
 %%
@@ -83,4 +85,10 @@ expresion : ID                      { if(!fueDeclarado($<id>1)) {yyerror("Error 
 void yyerror(const char *s){
 	printf("línea #%d: %s\n", yylineno, s);
 	return;
+}
+
+void semerror (const char *s){
+    yyerror(s);
+    semerrs++;
+    return;
 }

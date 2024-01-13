@@ -1,0 +1,27 @@
+Variable: e, Valor: 	2.718280
+Variable: pi, Valor: 	3.141590
+Funcion: log, Direccion: 	00007ff720eca100
+Funcion: sqrt, Direccion: 	00007ff720ec5f00
+Funcion: acos, Direccion: 	00007ff720ed36c8
+Funcion: asin, Direccion: 	00007ff720ed36d0
+Funcion: atan, Direccion: 	00007ff720ed36d8
+Funcion: tan, Direccion: 	00007ff720ed36e0
+Funcion: cos, Direccion: 	00007ff720ec9fb0
+Funcion: sin, Direccion: 	00007ff720eca840
+> a: '1.000000'
+
+> b: '2.000000'
+
+> c: '3.000000'
+
+c: > z: '3.500000'
+
+a: > 7.000000
+
+b: > 6.000000
+
+c: > 3.000000
+
+línea #9: syntax error, unexpected NL
+
+Fin del parser: 1

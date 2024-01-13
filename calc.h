@@ -7,6 +7,7 @@ extern int semerrs;
 struct Identificador {
     char* nom;
     int   tipo;
+    int   declarado;
     union {
         double (*fun)(double);
         double var;
@@ -18,16 +19,16 @@ struct NodoId {
     struct NodoId* sig;
 };
 
+extern struct NodoId temp;
 extern struct NodoId *diccionario;
 
 void iniciarDiccionario(void);
-int fueDeclarado(char* idVariable);
+int fueDeclarado(struct NodoId* nodo);
 struct NodoId* buscarEnDict(char* idVariable);
-void declararId(char* idVariable);
-void asignarA(char* idVariable, const double num);
+struct NodoId* declararId(char* idVariable);
+void asignarA(struct NodoId* nodvar, const double num);
 int esFuncion (struct NodoId* nodo);
-double valorDe(char* idVariable);
+double valorDe(struct NodoId* nodId);
 void vaciarLista(struct NodoId** lista);
-void mostrarDiccionario(void);
 
 #endif //CALC_H
