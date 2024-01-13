@@ -1,14 +1,21 @@
+línea #2: ID no definido
 > a: '0.000000'
 > b: '2.300000'
+línea #5: Error, ID ya declarado
+línea #6: Error, ID ya declarado
 > 7.600000
-> 12.167000
+> 2.718280
 > 1.000000
+> 3.300000
+> 3.300000
 > 3.300000
 > -16.500000
 > 13.250000
-línea #9: Error léxico: Constante inválida: '12a3'
-línea #10: Error léxico: Identificador inválido: 'a#2.4'
-línea #11: Error léxico: Real inválido: '2.3.4a2.3'
-línea #12: Error léxico: Cadena desconocida: '@@#;@'
-línea #13: syntax error, unexpected '*', expecting ID or NRO or '-' or '('
+línea #14: Error léxico: Constante inválida: '12a3'
+línea #15: Error léxico: Identificador inválido: 'a#2.4'
+línea #16: Error léxico: Real inválido: '2.3.4a2.3'
+línea #17: Error léxico: Cadena desconocida: '@@#;@'
+> 5.300000
+línea #19: ID no definido
 > 3.300000
+línea #21: syntax error, unexpected '*', expecting ID or NRO or '-' or '('

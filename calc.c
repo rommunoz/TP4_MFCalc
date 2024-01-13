@@ -120,6 +120,7 @@ void iniciarDiccionario(void){
         info.valor.var = constantes[i].valor;
         push(&info, &diccionario);
     }
+    printf("> ");
 }
 
 

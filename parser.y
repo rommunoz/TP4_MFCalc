@@ -1,6 +1,7 @@
 %code top{
 #include <stdio.h>
 #include <math.h>
+#include <ctype.h>
 #include "scanner.h"
 #include "calc.h"
 int yylex(void);
@@ -41,16 +42,16 @@ programa: sesion                { if (semerrs || yynerrs || yylexerrs) YYABORT;}
 sesion 	: linea NL              
     | sesion linea NL           
     ;
-linea   :  expresion            { printf("> %f\n", $<nro>1); }
+linea   :  expresion            { printf(" %f\n> ", $<nro>1); }
     | error
-    | PR_VAR ID                 { if ($2->info.declarado)   {semerror("Error, ID ya declarado"); YYERROR;} 
+    | PR_VAR ID                 { if ($2->info.declarado)   {semerror("Error, ID ya declarado\n> "); YYERROR;} 
                                     declararId($2->info.nom);
-                                    printf("> %s: '%f'\n", $2->info.nom, $2->info.valor.var);
+                                    printf("%s: '%f'\n> ", $2->info.nom, $2->info.valor.var);
                                 }
-    | PR_VAR ID '=' expresion   { if ($2->info.declarado)   {semerror("Error, ID ya declarado"); YYERROR;}
+    | PR_VAR ID '=' expresion   { if ($2->info.declarado)   {semerror("Error, ID ya declarado\n> "); YYERROR;}
                                     struct NodoId* nuevo = declararId($2->info.nom);
                                     asignarA(nuevo, $4);
-                                    printf("> %s: '%f'\n", nuevo->info.nom, nuevo->info.valor.var);
+                                    printf("%s: '%f'\n> ", nuevo->info.nom, nuevo->info.valor.var);
                                 }
     | PR_SALIR                  { return (yynerrs || yylexerrs || semerrs);}
     ;
@@ -89,6 +90,7 @@ expresion : ID                  { if(! fueDeclarado($1))    {semerror("ID no def
     | '-' expresion  %prec NEG  { $$ = -$2; }
     | '(' expresion ')'         { $$ = $2;  }
     | ID '(' expresion ')'      { if(! esFuncion($1))       {semerror("Error, la función no está definida"); YYERROR;}
+                                  if(! isnormal($1->info.valor.fun ($<nro>3))) {semerror("Error matemático"); YYERROR;}
                                     $$ = $1->info.valor.fun ($<nro>3);
                                 }  
     ;
@@ -96,7 +98,7 @@ expresion : ID                  { if(! fueDeclarado($1))    {semerror("ID no def
 %%
 
 void yyerror(const char *s){
-	printf("línea #%d: %s\n", yylineno, s);
+	printf("línea #%d: %s\n> ", yylineno, s);
 	return;
 }
 

@@ -1,54 +1,25 @@
-Define ID como variable
-
-Número
-Define ID como variable con valor inicial
-
-Número
-ID
-Número
-Multplicación
-Suma
-Asignación
-Expresión
-
-ID
-Número
-Potenciación
-Expresión
-
-ID
-Número
-División
-Función
-Expresión
-
-Número
-Asignación con suma
-Asignación
-Expresión
-
-Número
-Número
-Suma
-Cierra paréntesis
-ID
-Cambio Signo
-Multplicación
-Expresión
-
-Número
-Expresión
-
-Error léxico: constante inválida: 12a3
-
-Error léxico: identificador inválido: a#2.4
-
-Error léxico REAL inválido: 2.3.4a2.3
-Error léxico: cadena desconocida: @@#;@
-
-Número
-syntax error, unexpected '*', expecting NUM or ID or '-' or '('
-
-ID
-Expresión
-
+> Error: ID a no declarado
+> a: 0
+> b: 2.3
+> Error, identificador ya declarado como variable
+> syntax error, unexpected FUN, expecting ID
+> 7.6
+> k: 1.2
+> 1.728
+> 2.718281828
+> 1
+> 3.3
+> 3.3
+> 3.3
+> Los operadores de asignación solo admiten una variable como operando izquierdo
+> -6
+> 13.25
+> Error léxico: constante inválida: 12a3
+> Error léxico: identificador inválido: a#2.4
+> Error léxico REAL inválido: 2.3.4a2.3
+> Error léxico: cadena desconocida: @@#;@
+> 5.3
+> Error: ID z no declarado
+> 3.3
+> syntax error, unexpected '*'
+> 
