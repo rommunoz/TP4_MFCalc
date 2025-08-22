@@ -90,7 +90,7 @@ expresion : ID                  { if(! fueDeclarado($1))    {semerror("ID no def
     | '-' expresion  %prec NEG  { $$ = -$2; }
     | '(' expresion ')'         { $$ = $2;  }
     | ID '(' expresion ')'      { if(! esFuncion($1))       {semerror("Error, la función no está definida"); YYERROR;}
-                                  if(! isnormal($1->info.valor.fun ($<nro>3))) {semerror("Error matemático"); YYERROR;}
+                                  if(isnan($1->info.valor.fun ($<nro>3))) {semerror("Error matemático"); YYERROR;}
                                     $$ = $1->info.valor.fun ($<nro>3);
                                 }  
     ;
