@@ -44,7 +44,8 @@ sesion 	: linea NL
     ;
 linea   :  expresion            { printf(" %f\n> ", $<nro>1); }
     | error
-    | PR_VAR ID                 { if ($2->info.declarado)   {semerror("Error, ID ya declarado\n> "); YYERROR;} 
+    | PR_VAR ID                 { if(esFuncion($2))         {semerror("Error, ID ya declarado como función\n> "); YYERROR;} 
+                                  if($2->info.declarado)    {semerror("Error, ID ya declarado\n> "); YYERROR;} 
                                     declararId($2->info.nom);
                                     printf("%s: '%f'\n> ", $2->info.nom, $2->info.valor.var);
                                 }
@@ -55,7 +56,8 @@ linea   :  expresion            { printf(" %f\n> ", $<nro>1); }
                                 }
     | PR_SALIR                  { return (yynerrs || yylexerrs || semerrs);}
     ;
-expresion : ID                  { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
+expresion : ID                  { if(esFuncion($1))         {semerror("Error, ID ya declarado como función\n> "); YYERROR;}
+                                  if(!fueDeclarado($1))     {semerror("ID no definido"); YYERROR;}
                                     $$ = valorDe($1);
                                 }               
     | ID '=' expresion          { if(! fueDeclarado($1))    {semerror("ID no definido"); YYERROR;}
