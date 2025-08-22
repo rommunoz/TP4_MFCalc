@@ -2,7 +2,8 @@
 > b: '2.000000'
 > c: '3.000000'
 > z: '3.500000'
-> 7.000000
-> 6.000000
-> 3.000000
-línea #9: syntax error, unexpected NL
+>  7.000000
+>  6.000000
+>  3.000000
+> línea #9: syntax error, unexpected NL
+> 
